@@ -1,0 +1,74 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Networking;
+using System.Text.RegularExpressions;
+using UnityEngine.UI;
+
+public class LoginInfo
+{
+    public class Error
+    {
+        public string Message;
+    }
+
+    public bool IsSuccess { get; set; }
+    public string SessionId { get; set; }
+    public string[] Errors { get; set; }
+}
+
+public class ServiceManager : MonoBehaviour {
+    
+    [SerializeField] private InputField username, password;
+    private const string url = "https://api.allaboutonline.co.uk/", api = "api.php?url=";
+    private string sessionId, groupId;
+    private LoginInfo loginInfo;
+
+    public void TryLogin()
+    {
+        StartCoroutine(Login());
+    }
+
+    public void TrySessions()
+    {
+        StartCoroutine(GetSessionCalendar());
+    }
+
+    private IEnumerator Login()
+    {
+        string loginRequest = url + "login.php?username=" + username.text + "&password=" + password.text.Replace("&", "%26");
+        Debug.Log(loginRequest);
+        WWW www = new WWW(loginRequest);
+        yield return www;
+
+        Debug.Log(www.text);
+        loginInfo = JsonUtility.FromJson<LoginInfo>(www.text);
+        if (www.text.Contains("\"IsSuccess\": true"))
+        {
+            sessionId = www.text.Split('"')[3];
+            gameObject.GetComponent<SwitchView>().View("Main");
+            StartCoroutine(GetSessionCalendar());
+        }
+        else
+        {
+            //Debug.Log(www.text.Split('"')[12]);
+        }
+    }
+    
+    private IEnumerator GetSessionCalendar()
+    {
+        //url: url + 'api.php?url=' + encodeURI('query?q=FROM%20Force.Force__Choir_Session__c%20WHERE%20Choir_Group__c%20=%20"' + groupId + '"') + '&token=' + $localStorage.userData.SessionId
+        
+        string request = url + WWW.EscapeURL("api.php?url=query?q=FROM%2520Force.Force__Venue__c" + sessionId);
+        Debug.Log(request);
+        WWW www = new WWW(request);
+
+        yield return www;
+        Debug.Log(www.text);
+    }
+
+    private IEnumerator MakeRequest()
+    {
+        yield return null;
+    }
+}

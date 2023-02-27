@@ -1,0 +1,26 @@
+fileFormatVersion: 2
+guid: b5fbc233af2303c4486745e782b9340a
+timeCreated: 1486548352
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Montserrat Alternates
+  fontNames:
+  - Montserrat Alternates
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 9c852281af38f3e459a2ae71f830dd6f, type: 3}
+  - {fileID: 12800000, guid: 2321b033348dfbb4489fa44e370fb15a, type: 3}
+  - {fileID: 12800000, guid: a26ab3434c0b37f4ba8ae84665089946, type: 3}
+  - {fileID: 12800000, guid: 387fd6c414802d346acf557b14c03e39, type: 3}
+  - {fileID: 12800000, guid: a6ac41d48ae9501449c4868461e7b102, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,70 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Networking;
+using System.Text.RegularExpressions;
+using UnityEngine.UI;
+
+public class LoginInfo
+{
+    public bool IsSuccess;
+    public string SessionId;
+    public List<Error> Errors;
+
+    public class Error
+    {
+        public string Message;
+    }
+}
+
+public class ServiceManager : MonoBehaviour {
+    
+    [SerializeField] private InputField username, password;
+    private const string url = "https://api.allaboutonline.co.uk/", api = "api.php?url=";
+    private LoginInfo userInfo;
+
+    public void TryLogin()
+    {
+        StartCoroutine(Login());
+    }
+
+    public void TrySessions()
+    {
+        StartCoroutine(GetSessionCalendar());
+    }
+
+    private IEnumerator Login()
+    {
+        string loginRequest = url + "login.php?username=" + username.text + "&password=" + password.text.Replace("&", "%26");
+        WWW www = new WWW(loginRequest);
+        yield return www;
+
+        userInfo = JsonUtility.FromJson<LoginInfo>(www.text);
+        if (userInfo.IsSuccess)
+        {
+            gameObject.GetComponent<SwitchView>().View("Main");
+            StartCoroutine(GetSessionCalendar());
+        }
+        else
+        {
+            // Any debug messages here when they deserialise correctly.
+        }
+    }
+    
+    private IEnumerator GetSessionCalendar()
+    {
+        //url: url + 'api.php?url=' + encodeURI('query?q=FROM%20Force.Force__Choir_Session__c%20WHERE%20Choir_Group__c%20=%20"' + groupId + '"') + '&token=' + $localStorage.userData.SessionId
+        
+        string request = url + WWW.EscapeURL("api.php?url=query?q=FROM%2520Force.Force__Venue__c" + userInfo.IsSuccess);
+        Debug.Log(request);
+        WWW www = new WWW(request);
+
+        yield return www;
+        Debug.Log(www.text);
+    }
+
+    private IEnumerator MakeRequest()
+    {
+        yield return null;
+    }
+}
